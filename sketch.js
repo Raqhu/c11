@@ -1,52 +1,58 @@
-//declaring all the variables 
-var trex, trex_running, trex_collided;
-var ground, invisibleGround, groundImage;
+//declaring global variables
+var jaxon_run
+var road_ground
+var jaxon
+var path
+var wall1
+var wall2
 
-//preloading all the animations and images
-function preload() {
-    trex_running = loadAnimation("trex1.png", "trex3.png", "trex4.png");
-    trex_collided = loadImage("trex_collided.png");
-    groundImage = loadImage("ground2.png")
+
+function preload(){
+//pre-load images
+  jaxon_run = loadAnimation("Runner-1.png","Runner-2.png");
+  road_ground = loadAnimation("path.png");
 }
 
+function setup(){
+  createCanvas(400,400);
+//create sprites here
 
-function setup() {
-    createCanvas(600, 200);
+  path = createSprite(200,200);
+  path.addAnimation("ground",road_ground);
 
-    //create a trex sprite
-    trex = createSprite(50,160,20,50);
-    trex.addAnimation("running", trex_running);
-    trex.scale = 0.5;
+//creating the invisible walls
+  wall1 = createSprite(60,200,25,400)
+  wall1.visible = false;
+  wall2 = createSprite(340,200,25,400)
+  wall2.visible = false;
 
-    //create a ground sprite
-    ground = createSprite(200,180,400,20);
-    ground.addImage("ground",groundImage);
-    ground.x = ground.width /2;
-    ground.velocityX = -4;
+//creating jaxon
+  jaxon = createSprite(200,300);
+  jaxon.addAnimation("run",jaxon_run);
+  jaxon.scale = 0.05;
 
-    //create an invisible ground
-    invisibleGround = createSprite(300,190,600,20)
-    invisibleGround.visible = false;
 }
 
 
 function draw() {
-    background(220);
-    console.log(trex.y);
+  createEdgeSprites();
+  background("black");
+path.velocityY = 4;
 
-    //jump when the space button is pressed,make the jump of the trex limited
-    if (keyDown("space") && trex.y>=135) {
-    trex.velocityY = -10;
-    }
-    trex.velocityY = trex.velocityY + 0.8
+//adding if statement for infinte path
+if(path.y > 500){
+  path.y = height/2;
+}
 
-    //infinite ground
-    if (ground.x < 0) {
-    ground.x = ground.width / 2;
-    }
-    
-    //trex colliding with invisible ground so it touches the normal ground
-    trex.collide(invisibleGround);
-
-    drawSprites();
+//adding movement for jaxon
+if(keyIsDown(LEFT_ARROW)){
+  jaxon.x = jaxon.x + -5;
+}
+if(keyIsDown(RIGHT_ARROW)){
+  jaxon.x = jaxon.x + 5;
+}
+//adding collision between jaxon and invisble walls
+jaxon.collide(wall1);
+jaxon.collide(wall2);
+  drawSprites();
 }
